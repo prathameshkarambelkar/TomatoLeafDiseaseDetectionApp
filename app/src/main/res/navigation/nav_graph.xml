@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/captureImage">
+
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="com.example.tomatoleafdiseasedetectionapp.homeScreen"
+        android:label="fragment_home_screen"
+        tools:layout="@layout/fragment_home_screen" >
+        <action
+            android:id="@+id/action_homeScreen_self"
+            app:destination="@id/homeScreen" />
+        <action
+            android:id="@+id/action_homeScreen_to_captureImage"
+            app:destination="@id/captureImage" />
+    </fragment>
+    <fragment
+        android:id="@+id/captureImage"
+        android:name="com.example.tomatoleafdiseasedetectionapp.captureImage"
+        android:label="fragment_capture_image"
+        tools:layout="@layout/fragment_capture_image" >
+        <action
+            android:id="@+id/action_captureImage_to_results"
+            app:destination="@id/results" />
+        <action
+            android:id="@+id/action_captureImage_to_homeScreen"
+            app:destination="@id/homeScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/results"
+        android:name="com.example.tomatoleafdiseasedetectionapp.results"
+        android:label="fragment_results"
+        tools:layout="@layout/fragment_results" />
+</navigation>
