@@ -35,8 +35,6 @@ class captureImage : Fragment() {
 
 
     private var imageCapture: ImageCapture? = null
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
     private var _binding: FragmentCaptureImageBinding? = null
     private val binding get() = _binding!!
@@ -56,10 +54,9 @@ class captureImage : Fragment() {
 
         // Set up the listeners for take photo and video capture buttons
         binding.imageCaptureButton.setOnClickListener {
-            Toast.makeText(activity, "ButtonClicked", Toast.LENGTH_SHORT).show()
             takePhoto()
         }
-        binding.videoCaptureButton.setOnClickListener { captureVideo() }
+
 
         cameraExecutor = Executors.newSingleThreadExecutor()
         val view = binding.root
@@ -71,10 +68,6 @@ class captureImage : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
-
 
 
     private fun captureVideo() {}
@@ -105,9 +98,10 @@ class captureImage : Fragment() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture
+                )
 
-            } catch(exc: Exception) {
+            } catch (exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
 
@@ -122,6 +116,7 @@ class captureImage : Fragment() {
         super.onDestroy()
         cameraExecutor.shutdown()
     }
+
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -132,16 +127,18 @@ class captureImage : Fragment() {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
             }
         }
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireActivity().contentResolver,
+            .Builder(
+                requireActivity().contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
+                contentValues
+            )
             .build()
 
         // Set up image capture listener, which is triggered after photo has
@@ -155,7 +152,7 @@ class captureImage : Fragment() {
                 }
 
                 override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
+                        onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
@@ -170,7 +167,7 @@ class captureImage : Fragment() {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =
-            mutableListOf (
+            mutableListOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO
             ).apply {
@@ -179,9 +176,6 @@ class captureImage : Fragment() {
                 }
             }.toTypedArray()
     }
-
-
-
 
 
 }
